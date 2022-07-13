@@ -30,12 +30,10 @@ Una vez dicho todo esto, podemos empezar.
     - [Escenarios](#escenarios)
     - [Lenguajes admitidos](#lenguajes-admitidos)
     - [Detalles de la compatibilidad con lenguajes](#detalles-de-la-compatibilidad-con-lenguajes)
-- [Practica 6](#practica-6-implementación-y-uso-de-azure-funtions)
-    - []()
-    - []()
-    - []()
-    - []()
-    - []()
+- [Practica 6](#practica-6-implementación-y-uso-de-azure-functions)
+    - [Creación del recurso](#creación-del-recurso)
+    - [Creación de función](#creación-de-función)
+    - [Testing: Talend API Tester](#testing-talend-api-tester)
 
 -------
 
@@ -119,19 +117,93 @@ En la tabla siguiente se muestran los idiomas admitidos por Functions que se pue
 
 --------------
 
-# 【Practica 6: Implementación y uso de Azure Funtions】
-### 〔〕
+# 【Practica 6: Implementación y uso de Azure Functions】
+### 〔Creación del recurso〕
+Para crear el recurso de Azure Functions, debemos ir a nuestro portal de Azure.
 
-![]()
+1. En la barra de navegación, buscamos *Azure Functions*.
 
-### 〔〕
+![](https://i.imgur.com/3z0Fukc.png)
+> Es posible que en el portal aparezca con su nombre en español: "Aplicación de funciones"
 
-![]()
+2. Hacemos clic en *Crear*.
 
-### 〔〕
+3. Nos llevará al panel de creación del recurso. Aquí colocamos los parametros que hemos visto a lo largo de las otras prácticas. *Suscripción*, *Grupo de recursos*, *Nombre del recurso* y *Región*.
 
-![]()
+![](https://i.imgur.com/hDnWkol.png)
 
-### 〔〕
+4. Además, nos solicitará el lenguaje en el cual trabajaremos nuestro código. (como esta es una prueba, usaremos `Node.js` versión `16 LTS`)
 
-![]()
+5. Emplearemos un Sistema Operativo **Linux** y un plan de **Consumo (sin servidor)**.
+
+![](https://i.imgur.com/ZKseasN.png)
+
+6. Ahora, damos al botón *Revisar y crear*.
+
+7. Verificamos las configuraciones, y hacemos clic en *Crear*.
+
+![](https://i.imgur.com/QXXpAcj.png)
+
+8. Y esperamos a que termine la implementación.
+
+![](https://i.imgur.com/gkcfjiQ.png)
+
+
+
+### 〔Creación de función〕
+Una vez dentro del recurso, nos dirigimos al apartado de *Funciones* > *Funciones*
+
+1. Debemos crear nuestra primera función, damos clic en el botón *Crear*
+
+![](https://i.imgur.com/hxWWtXF.png)
+
+2. Ahora, especificamos que tipo de función queremos crear. En este caso, crearemos una función de tipo HTTP Trigger; dicho tipo se ejecuta al momento de recibir una petición HTTP y responde en base al código.
+
+![](https://i.imgur.com/Fn06dKe.png)
+
+3. Para fines prácticos, Azure ya nos proporciona un ejemplo/plantilla, o sea, un código de prueba completamente listo para ser editado y/o ejecutado.
+
+![](https://i.imgur.com/1ah35DX.png)
+![](https://i.imgur.com/ejnV84s.png)
+> En mi caso, decidí modificarlo un poco para que los mensajes que recibirá el usuario sean en español.
+
+4. Ahora, dentro del cuerpo de la Petición, nos pedirá un nombre el cual recibirá y trabajará nuestra función.
+
+![](https://i.imgur.com/rhmlRlV.png)
+
+5. Al darle en *Ejecutar*, la función recibió mi nombre y en consecuencia, tuvimos una respuesta de salida como vemos en la imagen:
+
+![](https://i.imgur.com/oAhEwvZ.png)
+
+### 〔Testing: Talend API Tester〕
+¿Como podemos asegurarnos de que está funcionando sin tener que manipular la función internamente?
+
+Para esto, usaremos una extensión que nos permitirá testear una función desde un entorno local, sin relación con Azure.
+
+1. Primero que nada, necesitamos extraer la *Dirección URL* de esta función. Dicha URL nos permitirá conectarla en cualquier parte que queramos de nuestros entornos locales sin necesidad de estar en Azure.
+
+![](https://i.imgur.com/9xiPHXN.png)
+
+2. En google, buscamos la extensión **Talend API Tester** versión **Gratuita**, y la instalamos en nuestro navegador.
+
+![](https://i.imgur.com/DlkJxTY.png)
+
+3. Una vez instalada, la abrimos y veremos una interfaz así.
+
+4. Insertamos la URL que copiamos en el espacio en blanco al lado del botón *Send*. El *Method* es de tipo **Post**
+
+![](https://i.imgur.com/8l9BQ2R.png)
+
+5. Al darle *Send*, nos arrojará un error de Autorización. Esto ocurre porque si bien podemos manipular recursos de Azure de forma local, Azure siempre se asegura de protegerlos de posibles intrusos mediante *Autenticación* y *Autorización*. Por ende, en la mayoría de los recursos, se nos generan *claves* que nos permiten Autenticarnos de forma remota y estas brindan lo necesario para que Azure reconozca que somos capaces de operarlos.
+
+6. Nos dirigimos al apartado *Claves de función*, y después, copiamos todos los carácteres que tenemos en *Valor* (Podemos usar el botón de la derecha que nos permite *Copiar al Portapapeles*).
+
+![](https://i.imgur.com/gqS7V0g.png)
+
+7. Ahora, para darle a API Tester la capacidad de usar la clave, debemos añadir un *Header*, el cual tendrá por nombre **x-functions-key** y con un valor de ***nuestra clave copiada***
+
+![](https://i.imgur.com/FJ1svnQ.png)
+
+8. Si intentamos ejecutar de nueva cuenta el código (con nuestro nombre asignado), podemos ver que ahora si obtuvimos una respuesta de la función, lo cual indica que hemos realizado la Autenticación satisfactoriamente y nuestra función opera de forma correcta.
+
+![](https://i.imgur.com/31gBQL3.png)
